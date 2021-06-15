@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D;
 using UnityEngine;
 
 public class CharacterMove : MonoBehaviour
@@ -14,16 +15,24 @@ public class CharacterMove : MonoBehaviour
 
     private Rigidbody2D _rigidBody;
 
+    private FlashLightControl _lightControl;
+
     // Start is called before the first frame update
     void Start()
     {
         _sprite = GetComponent<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
+        _lightControl = GetComponentInChildren<FlashLightControl>(true);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SwitchFlashLight();
+        }
+        
         HandleInput();
         UpdateTilePos();
         UpdateCharacterSpriteDirection();
@@ -61,5 +70,10 @@ public class CharacterMove : MonoBehaviour
                 _sprite.flipX = false;
             }
         }
+    }
+
+    private void SwitchFlashLight()
+    {
+        _lightControl.SwitchLight();
     }
 }
