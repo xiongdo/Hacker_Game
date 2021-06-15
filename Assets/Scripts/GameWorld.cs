@@ -8,5 +8,12 @@ public class GameWorld : Singleton<GameWorld>
     [SerializeField]
     protected Tilemap _curMap;
 
+    public Tilemap Map
+    {
+        get
+        {
+            return _curMap;
+        }
+    }
 
 }
