@@ -38,4 +38,25 @@ public class GameWorld : Singleton<GameWorld>
             // _globalLight2D.intensity = _globalLightIntesity;
         }
     }
+
+    public void TurnOffGlobalLight()
+    {
+        _globalLight2D.intensity = 0f;
+    }
+
+    public void TurnOnGloablLight()
+    {
+        _globalLight2D.intensity = _globalLightIntesity;
+    }
+
+    public void TurnOnGloablLight(float intensity)
+    {
+        _globalLight2D.intensity = intensity;
+    }
+
+    public Vector3 GetCellCenterWorldPos(Vector3Int cellPos)
+    {
+        Vector3 cellSize;
+        return Map.CellToWorld(cellPos) + new Vector3((cellSize = Map.cellSize).x / 2f, cellSize.y / 2f, 0f);
+    }
 }

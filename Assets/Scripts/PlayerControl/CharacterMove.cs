@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using Packages.Rider.Editor.UnitTesting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.XR;
 
 public enum CellDirection
 {
@@ -22,18 +26,23 @@ public class CharacterMove : MonoBehaviour
 
     private Vector3 _targetMovePosition;
 
+    private bool _isInSetMode = false;
+
     private SpriteRenderer _sprite;
 
-    private Rigidbody2D _rigidBody;
-
     private FlashLightControl _lightControl;
+
+    private TransformerSetter _setter;
+
+    private Transform _setModeLight;
 
     // Start is called before the first frame update
     void Start()
     {
         _sprite = GetComponent<SpriteRenderer>();
-        _rigidBody = GetComponent<Rigidbody2D>();
+        _setter = GetComponent<TransformerSetter>();
         _lightControl = GetComponentInChildren<FlashLightControl>(true);
+        _setModeLight = transform.Find("SetModeLight");
 
         _targetMovePosition = transform.position;
         
@@ -43,14 +52,57 @@ public class CharacterMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            SwitchFlashLight();
-        }   
+            _isInSetMode = !_isInSetMode;
+            if (!_isInSetMode)
+            {
+                _setter.HideSetter();
+                _setModeLight.gameObject.SetActive(false);
+                GameWorld.Instance.TurnOnGloablLight(1F);
+            }
+            else
+            {
+                _setModeLight.gameObject.SetActive(true);
+                GameWorld.Instance.TurnOffGlobalLight();
+            }
+        }
+
+        if (_isInSetMode)
+        {
+            HandleSetMode();
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SwitchFlashLight();
+            }
         
-        HandleInput();
-        UpdateTilePos();
-        UpdateCharacterSpriteDirection();
+            HandleInput();
+            UpdateTilePos();
+            UpdateCharacterSpriteDirection();
+        }
+    }
+
+    private void HandleSetMode()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            _setter.Preview(_curTilePos + Vector3Int.right);
+        }   
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            _setter.Preview(_curTilePos + Vector3Int.left);
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            _setter.Preview(_curTilePos + Vector3Int.up);
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            _setter.Preview(_curTilePos + Vector3Int.down);
+        }
     }
 
     private void HandleInput()
@@ -96,9 +148,8 @@ public class CharacterMove : MonoBehaviour
                 if (!hit)
                 {
                     Vector3 cellSize = GameWorld.Instance.Map.cellSize;
-                    _targetMovePosition = 
-                        GameWorld.Instance.Map.CellToWorld(_curTilePos + moveVector) + 
-                        new Vector3((cellSize).x / 2f, cellSize.y / 2f);
+                    _targetMovePosition =
+                        GameWorld.Instance.GetCellCenterWorldPos(_curTilePos + moveVector);
                 }
             }
         }
@@ -107,7 +158,7 @@ public class CharacterMove : MonoBehaviour
     private void UpdateTilePos()
     {
         _curTilePos = GameWorld.Instance.Map.WorldToCell(transform.position);
-        Debug.Log("Cur Cell pos: " + _curTilePos);
+        // Debug.Log("Cur Cell pos: " + _curTilePos);
     }
 
     private void UpdateCharacterSpriteDirection()
