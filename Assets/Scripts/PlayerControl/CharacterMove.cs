@@ -11,9 +11,29 @@ using UnityEngine.XR;
 public enum CellDirection
 {
     Left,
-    Top,
+    Up,
     Right,
     Down
+}
+
+public static class CellDirectionExtension
+{
+    public static Vector3Int GetVectorFromDirection(this CellDirection direction)
+    {
+        switch (direction)
+        {
+            case CellDirection.Left:
+                return Vector3Int.left;
+            case CellDirection.Down:
+                return Vector3Int.down;
+            case CellDirection.Right:
+                return Vector3Int.right;
+            case CellDirection.Up:
+                return Vector3Int.up;
+            default:
+                return Vector3Int.zero;
+        }
+    }
 }
 
 public class CharacterMove : MonoBehaviour
@@ -57,14 +77,11 @@ public class CharacterMove : MonoBehaviour
             _isInSetMode = !_isInSetMode;
             if (!_isInSetMode)
             {
-                _setter.HideSetter();
-                _setModeLight.gameObject.SetActive(false);
-                GameWorld.Instance.TurnOnGloablLight(1F);
+                ExitSetMode();
             }
             else
             {
-                _setModeLight.gameObject.SetActive(true);
-                GameWorld.Instance.TurnOffGlobalLight();
+                EnterSetMode();
             }
         }
 
@@ -85,23 +102,46 @@ public class CharacterMove : MonoBehaviour
         }
     }
 
+    private void ExitSetMode()
+    {
+        _setter.HideSetter();
+        _setModeLight.gameObject.SetActive(false);
+        GameWorld.Instance.TurnOnGloablLight(1F);
+        _isInSetMode = false;
+    }
+
+    private void EnterSetMode()
+    {
+        _setModeLight.gameObject.SetActive(true);
+        GameWorld.Instance.TurnOffGlobalLight();
+    }
+
     private void HandleSetMode()
     {
-        if (Input.GetKeyDown(KeyCode.D))
+        var mouseGridPos = GameWorld.Instance.Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        
+        // if (Input.GetKeyDown(KeyCode.D))
+        // {
+        //     _setter.Preview(_curTilePos + Vector3Int.right);
+        // }   
+        // else if (Input.GetKeyDown(KeyCode.A))
+        // {
+        //     _setter.Preview(_curTilePos + Vector3Int.left);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.W))
+        // {
+        //     _setter.Preview(_curTilePos + Vector3Int.up);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.S))
+        // {
+        //     _setter.Preview(_curTilePos + Vector3Int.down);
+        // }
+        
+        _setter.Preview(mouseGridPos);
+
+        if (Input.GetMouseButtonUp(0))
         {
-            _setter.Preview(_curTilePos + Vector3Int.right);
-        }   
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            _setter.Preview(_curTilePos + Vector3Int.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            _setter.Preview(_curTilePos + Vector3Int.up);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            _setter.Preview(_curTilePos + Vector3Int.down);
+            _setter.SetTransformer();
         }
     }
 

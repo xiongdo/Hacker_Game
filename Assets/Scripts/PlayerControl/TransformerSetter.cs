@@ -13,7 +13,10 @@ public class TransformerSetter : MonoBehaviour
 
     public void HideSetter()
     {
-        _transformerGo.SetActive(false);
+        if (_transformerGo)
+        {
+            _transformerGo.SetActive(false);
+        }
     }
 
     public void Preview(Vector3Int cellPos)
@@ -28,12 +31,13 @@ public class TransformerSetter : MonoBehaviour
         _transformerGo.transform.position = GameWorld.Instance.GetCellCenterWorldPos(cellPos);
     }
 
-    public void SetTransformer(Vector3Int cellPos)
+    public void SetTransformer()
     {
         if (_transformerGo)
         {
+            _transformerGo.AddComponent<BoxCollider2D>();
             _transformerGo.AddComponent<Transformer>();
-            _transformerGo.transform.position = GameWorld.Instance.GetCellCenterWorldPos(cellPos);
+            _transformerGo.transform.parent = null;
             _transformerGo = null;
         }
     }
