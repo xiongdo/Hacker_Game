@@ -1,9 +1,59 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+
+public class TilePair
+{
+    public TilePair(Vector3Int pos, MachineTileScriptable tileToDraw)
+    {
+        cellPos = pos;
+        tile = tileToDraw;
+    }
+    
+    public Vector3Int cellPos;
+    public MachineTileScriptable tile;
+}
 
 public class MachineMgr : Singleton<MachineMgr>
 {
+    [Header("Machine Setting")] 
+    [SerializeField]
+    protected bool _isInSafeMode = true;
+    public bool IsSafeMode => _isInSafeMode;
+
+    private List<Vector3Int> _tilesToRemove = new List<Vector3Int>();
+
+    private List<TilePair> _tilesToDraw = new List<TilePair>();
+
     public List<Sprite> _transformerSprites = new List<Sprite>();
+
+    private void LateUpdate()
+    {
+        foreach (var pos in _tilesToRemove)
+        {
+            GameWorld.Instance.Map.SetTile(pos, null);
+        }
+        foreach (TilePair tilePair in _tilesToDraw)
+        {
+            GameWorld.Instance.Map.SetTile(tilePair.cellPos, tilePair.tile);
+        }
+        _tilesToDraw.Clear();
+        _tilesToRemove.Clear();
+    }
+    
+    public bool DrawTiles(MachineTileScriptable tile, Vector3Int pos)
+    {
+        // GameWorld.Instance.Map.SetTile(pos, tile);
+        _tilesToDraw.Add(new TilePair(pos, tile));
+        
+        return true;
+    }
+
+    public void AddRemove(Vector3Int tile)
+    {
+        _tilesToRemove.Add(tile);
+    }
 }

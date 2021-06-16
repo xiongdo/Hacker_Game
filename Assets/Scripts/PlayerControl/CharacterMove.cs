@@ -6,14 +6,19 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.XR;
 
 public enum CellDirection
 {
     Left,
+    LeftUp,
     Up,
+    RightUp,
     Right,
-    Down
+    RightDown,
+    Down,
+    LeftDown
 }
 
 public static class CellDirectionExtension
@@ -30,9 +35,27 @@ public static class CellDirectionExtension
                 return Vector3Int.right;
             case CellDirection.Up:
                 return Vector3Int.up;
+            case CellDirection.LeftDown:
+                return new Vector3Int(-1, -1, 0);
+            case CellDirection.RightDown:
+                return new Vector3Int(1, -1, 0);
+            case CellDirection.RightUp:
+                return new Vector3Int(1, 1, 0);
+            case CellDirection.LeftUp:
+                return new Vector3Int(-1, 1, 0);
             default:
                 return Vector3Int.zero;
         }
+    }
+
+    public static Vector3Int GetDirectionCellPos(this CellDirection direction, Vector3Int cellPos)
+    {
+        return cellPos + direction.GetVectorFromDirection();
+    }
+
+    public static Vector3Int GetOppositeCellPos(this CellDirection direction, Vector3Int cellPos)
+    {
+        return cellPos - direction.GetVectorFromDirection();
     }
 }
 
