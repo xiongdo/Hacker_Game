@@ -35,7 +35,7 @@ public class GameWorld : Singleton<GameWorld>
     {
         if (_globalLight2D)
         {
-            _globalLight2D.intensity = _globalLightIntesity;
+            // _globalLight2D.intensity = _globalLightIntesity;
         }
     }
 }
