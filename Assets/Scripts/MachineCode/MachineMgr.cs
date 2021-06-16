@@ -35,10 +35,12 @@ public class MachineMgr : Singleton<MachineMgr>
         foreach (var pos in _tilesToRemove)
         {
             GameWorld.Instance.Map.SetTile(pos, null);
+            Debug.Log("Remove at: " + pos);
         }
         foreach (TilePair tilePair in _tilesToDraw)
         {
             GameWorld.Instance.Map.SetTile(tilePair.cellPos, tilePair.tile);
+            Debug.Log("Draw at: " + tilePair.cellPos);
         }
         _tilesToDraw.Clear();
         _tilesToRemove.Clear();

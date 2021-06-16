@@ -58,11 +58,11 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
             {
                 MachineMgr.Instance.DrawTiles(tile, dir.GetOppositeCellPos(curCellPos));
                 MachineMgr.Instance.AddRemove(scanCellPos);
+                _shouldCalmDown = true;
             }
             Debug.DrawLine(
                 scanWorldPos, 
                 scanWorldPos + (Vector3)(dir.GetVectorFromDirection()) * 0.4f);
-            _shouldCalmDown = true;
         }
         // var mouseGridPos = GameWorld.Instance.Map.WorldToCell();
     }
