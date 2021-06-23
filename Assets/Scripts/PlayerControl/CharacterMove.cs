@@ -166,6 +166,16 @@ public class CharacterMove : MonoBehaviour
         {
             _setter.SetTransformer();
         }
+
+        float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+        if (mouseWheel > 0)
+        {
+            _setter.SetScale(3.0f);
+        }
+        else if (mouseWheel < 0)
+        {
+            _setter.SetScale(1.0f);
+        }
     }
 
     private void HandleInput()

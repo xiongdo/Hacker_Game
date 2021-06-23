@@ -26,6 +26,15 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             return instance;
         }
     }
+    
+    public static T JustInstance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
     private static bool applicationIsQuitting = false;
 
     protected void OnDestroy()

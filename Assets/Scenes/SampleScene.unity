@@ -1314,8 +1314,10 @@ GameObject:
   - component: {fileID: 1865323259}
   - component: {fileID: 1865323258}
   - component: {fileID: 1865323260}
+  - component: {fileID: 1865323264}
   - component: {fileID: 1865323262}
   - component: {fileID: 1865323261}
+  - component: {fileID: 1865323263}
   m_Layer: 0
   m_Name: SingletonMgr
   m_TagString: Untagged
@@ -1409,6 +1411,30 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &1865323263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865323257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2433953a428a55a40adc66b6e2cf3f1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1865323264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865323257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1204fb6841a27884fa856c80677b978d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4190940892313859151
 PrefabInstance:
   m_ObjectHideFlags: 0

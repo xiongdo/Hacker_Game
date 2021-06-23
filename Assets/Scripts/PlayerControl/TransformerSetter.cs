@@ -11,11 +11,24 @@ public class TransformerSetter : MonoBehaviour
 
     private GameObject _transformerGo;
 
+    private float _maxScale = 3.0f;
+
+    private float _minScale = 1.0f;
+
     public void HideSetter()
     {
         if (_transformerGo)
         {
             _transformerGo.SetActive(false);
+        }
+    }
+
+    public void SetScale(float mul)
+    {
+        if (_transformerGo)
+        {
+            float scale = Mathf.Max(Mathf.Min(mul, _maxScale), _minScale);
+            _transformerGo.transform.localScale = new Vector3(scale, scale, scale);
         }
     }
 
@@ -36,7 +49,7 @@ public class TransformerSetter : MonoBehaviour
         if (_transformerGo)
         {
             _transformerGo.AddComponent<BoxCollider2D>();
-            _transformerGo.AddComponent<Transformer>();
+            _transformerGo.AddComponent<Transformer>().ListenInterrupt();
             _transformerGo.transform.parent = null;
             _transformerGo = null;
         }
