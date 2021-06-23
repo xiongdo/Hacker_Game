@@ -20,10 +20,12 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
     protected bool _shouldCalmDown = false;
 
     private TransformerState _state;
-    
-    public int SafeModeLayer;
 
     private Light2D _light;
+
+    private int _curSize;
+
+    public int SafeModeLayer;
 
     private void Awake()
     {
@@ -81,9 +83,18 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void ListenInterrupt()
+    public Transformer ListenInterrupt()
     {
         Interrupter.Instance.AddTransformer(this);
+
+        return this;
+    }
+
+    public Transformer SetSize(int size)
+    {
+        _curSize = size;
+
+        return this;
     }
 
     private bool ScanSafe()
@@ -92,20 +103,24 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
         foreach (CellDirection dir in Enum.GetValues(typeof(CellDirection)))
         {
             var curCellPos = GameWorld.Instance.Map.WorldToCell(transform.position);
-            var scanCellPos = dir.GetDirectionCellPos(curCellPos);
-            var scanWorldPos = GameWorld.Instance.GetCellCenterWorldPos(scanCellPos);
-
-            var tile = GameWorld.Instance.Map.GetTile(scanCellPos) as MachineTileScriptable;
-            if (tile && tile._type == TileType.Safe)
+            var scanCellPoss = dir.GetDirectionCellPoss(curCellPos, _curSize);
+            foreach (var scanCellPos in scanCellPoss)
             {
-                iswork = true;
-                MachineMgr.Instance.DrawTiles(tile, dir.GetOppositeCellPos(curCellPos));
-                MachineMgr.Instance.AddRemove(scanCellPos);
-                //_shouldCalmDown = true;
+                var scanWorldPos = GameWorld.Instance.GetCellCenterWorldPos(scanCellPos);
+
+                var tile = GameWorld.Instance.Map.GetTile(scanCellPos) as MachineTileScriptable;
+                if (tile && tile._type == TileType.Safe)
+                {
+                    iswork = true;
+                    MachineMgr.Instance.DrawTiles(tile, dir.GetOppositeCellPosTrans(curCellPos, scanCellPos));
+                    MachineMgr.Instance.AddRemove(scanCellPos);
+                    //_shouldCalmDown = true;
+                }
+                Debug.DrawLine(
+                    scanWorldPos,
+                    scanWorldPos + (Vector3)(dir.GetVectorFromDirection()) * 0.4f
+                );
             }
-            Debug.DrawLine(
-                scanWorldPos, 
-                scanWorldPos + (Vector3)(dir.GetVectorFromDirection()) * 0.4f);
         }
         return iswork;
         // var mouseGridPos = GameWorld.Instance.Map.WorldToCell();

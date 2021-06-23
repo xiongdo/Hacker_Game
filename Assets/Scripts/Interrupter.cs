@@ -57,7 +57,8 @@ public class Interrupter : Singleton<Interrupter>
         {
 
         }
-        else if (_state == InterrupterState.Debug)
+        
+        if (_state != InterrupterState.Runing)
         {
             if (Input.GetKeyDown(KeyCode.F10))
             {
@@ -92,7 +93,7 @@ public class Interrupter : Singleton<Interrupter>
         _transformers.Remove(transformer);
     }
 
-    private void InterruptAll()
+    public void InterruptAll()
     {
         foreach(var transformer in _transformers)
         {

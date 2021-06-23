@@ -26,5 +26,9 @@ public class DebugWnd : Singleton<DebugWnd>
         {
             Interrupter.Instance.Pause();
         }
+        if (GUI.Button(new Rect(10, 100, 100, 20), "Step"))
+        {
+            Interrupter.Instance.InterruptAll();
+        }
     }
 }

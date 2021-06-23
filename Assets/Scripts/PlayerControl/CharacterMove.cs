@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using System.Net.Sockets;
 using Packages.Rider.Editor.UnitTesting;
 using UnityEditor.ShaderGraph.Internal;
@@ -53,9 +54,37 @@ public static class CellDirectionExtension
         return cellPos + direction.GetVectorFromDirection();
     }
 
+    public static List<Vector3Int> GetDirectionCellPoss(this CellDirection direction, Vector3Int cellPos, int size)
+    {
+        List<Vector3Int> ret = new List<Vector3Int>();
+        if (GameTools.IsThreePower(size))
+        {
+            Vector3Int cellCenter = cellPos + direction.GetVectorFromDirection() * size;
+            for (int dx = -size / 2; dx <= size / 2; dx++)
+            {
+                for (int dy = -size / 2; dy <= size / 2; dy++)
+                    ret.Add(cellCenter + new Vector3Int(dx, dy, 0));
+            }
+        }
+
+        return ret;
+    }
+
     public static Vector3Int GetOppositeCellPos(this CellDirection direction, Vector3Int cellPos)
     {
         return cellPos - direction.GetVectorFromDirection();
+    }
+
+    //中心对称
+    public static Vector3Int GetOppositeCellPosSym(this CellDirection direction, Vector3Int cellPos, Vector3Int originPos)
+    {
+        return 2 * cellPos - originPos;
+    }
+
+    //平移
+    public static Vector3Int GetOppositeCellPosTrans(this CellDirection direction, Vector3Int cellPos, Vector3Int originPos)
+    {
+        return originPos - 2 * GameTools.GetSize(cellPos, originPos) * direction.GetVectorFromDirection();
     }
 }
 
@@ -135,6 +164,7 @@ public class CharacterMove : MonoBehaviour
 
     private void EnterSetMode()
     {
+        Interrupter.Instance.Stop();
         _setModeLight.gameObject.SetActive(true);
         GameWorld.Instance.TurnOffGlobalLight();
     }
