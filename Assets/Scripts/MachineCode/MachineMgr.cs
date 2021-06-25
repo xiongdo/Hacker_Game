@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class TilePair
 {
@@ -39,7 +40,8 @@ public class MachineMgr : Singleton<MachineMgr>
         }
         foreach (TilePair tilePair in _tilesToDraw)
         {
-            GameWorld.Instance.Map.SetTile(tilePair.cellPos, tilePair.tile);
+            //GameWorld.Instance.Map.SetTile(tilePair.cellPos, tilePair.tile);
+            CompoundTile(tilePair.cellPos, tilePair.tile);
             Debug.Log("Draw at: " + tilePair.cellPos);
         }
         _tilesToDraw.Clear();
@@ -57,5 +59,17 @@ public class MachineMgr : Singleton<MachineMgr>
     public void AddRemove(Vector3Int tile)
     {
         _tilesToRemove.Add(tile);
+    }
+
+    private void CompoundTile(Vector3Int cellPos, MachineTileScriptable addTile)
+    {
+        var originTile = GameWorld.Instance.Map.GetTile(cellPos) as MachineTileScriptable;
+        var retTile = CompoundRule(originTile, addTile);
+        GameWorld.Instance.Map.SetTile(cellPos, retTile);
+    }
+
+    private MachineTileScriptable CompoundRule(MachineTileScriptable o1, MachineTileScriptable o2)
+    {
+        return o2;
     }
 }

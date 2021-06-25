@@ -61,10 +61,8 @@ public static class CellDirectionExtension
         {
             Vector3Int cellCenter = cellPos + direction.GetVectorFromDirection() * size;
             for (int dx = -size / 2; dx <= size / 2; dx++)
-            {
                 for (int dy = -size / 2; dy <= size / 2; dy++)
                     ret.Add(cellCenter + new Vector3Int(dx, dy, 0));
-            }
         }
 
         return ret;
