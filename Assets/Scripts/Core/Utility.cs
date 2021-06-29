@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameTools
+public class Utility
 {
     public static bool IsThreePower(int n)
     {

@@ -57,7 +57,7 @@ public static class CellDirectionExtension
     public static List<Vector3Int> GetDirectionCellPoss(this CellDirection direction, Vector3Int cellPos, int size)
     {
         List<Vector3Int> ret = new List<Vector3Int>();
-        if (GameTools.IsThreePower(size))
+        if (Utility.IsThreePower(size))
         {
             Vector3Int cellCenter = cellPos + direction.GetVectorFromDirection() * size;
             for (int dx = -size / 2; dx <= size / 2; dx++)
@@ -82,7 +82,7 @@ public static class CellDirectionExtension
     //Æ½ÒÆ
     public static Vector3Int GetOppositeCellPosTrans(this CellDirection direction, Vector3Int cellPos, Vector3Int originPos)
     {
-        return originPos - 2 * GameTools.GetSize(cellPos, originPos) * direction.GetVectorFromDirection();
+        return originPos - 2 * Utility.GetSize(cellPos, originPos) * direction.GetVectorFromDirection();
     }
 }
 
