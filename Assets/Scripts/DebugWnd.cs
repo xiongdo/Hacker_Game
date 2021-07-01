@@ -27,8 +27,6 @@ public class DebugWnd : Singleton<DebugWnd>
 
     private Vector2 _scrollPosition;
 
-    private string _commondStr = _initStr;
-
     static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>
     {
         {LogType.Assert, Color.white},
