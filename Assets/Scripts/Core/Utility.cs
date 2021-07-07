@@ -15,4 +15,9 @@ public class Utility
         int d = Math.Max(Math.Abs(o.x - c.x), Math.Abs(o.y - c.y));
         return (int)Math.Pow(3, (int)Math.Log(2*d-1, 3));
     }
+
+    public static Vector3Int GetMouseCellPosition()
+    {
+        return GameWorld.Instance.Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+    }
 }
