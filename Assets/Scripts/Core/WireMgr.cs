@@ -6,6 +6,27 @@ public class WireMgr : Singleton<WireMgr>
 {
     private List<Wire> _wires;
 
+    [SerializeField]
+    private GameObject _lenPrefab;
+    [SerializeField]
+    private GameObject _canvas;
+
+    public GameObject LenPrefab
+    {
+        get
+        {
+            return _lenPrefab;
+        }
+    }
+
+    public GameObject WireCanvas
+    {
+        get
+        {
+            return _canvas;
+        }
+    }
+
     private void Awake()
     {
         _wires = new List<Wire>();    

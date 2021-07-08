@@ -13,7 +13,7 @@ public class Wire : MonoBehaviour
 
     private GameObject _len;
 
-    private float _lenWidth = 10f;
+    private float _lenWidth = 5f;
 
     private float _alpha = 1.0f;
 
@@ -39,8 +39,8 @@ public class Wire : MonoBehaviour
     {
         _lens = new List<GameObject>();
         _points = new List<Vector3>();
-        _canvas = GameObject.Find("Canvas");
-        _len = GameObject.Find("Len");
+        _canvas = WireMgr.Instance.WireCanvas;
+        _len = WireMgr.Instance.LenPrefab;
     }
 
     public void SetEndPosition(Vector3Int cellPos)
