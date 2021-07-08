@@ -40,6 +40,12 @@ public class WireMgr : Singleton<WireMgr>
     public void AddWire(Wire wire)
     {
         _wires.Add(wire);
+        ParseWire(wire);
+    }
+
+    private void ParseWire(Wire wire)
+    {
+
     }
 
     public void RemoveWire(Wire wireD)

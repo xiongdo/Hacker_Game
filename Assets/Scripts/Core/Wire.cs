@@ -37,6 +37,14 @@ public class Wire : MonoBehaviour
         }
     }
 
+    public int PointsCount
+    {
+        get
+        {
+            return _worldPoints.Count;
+        }
+    }
+
     private void Awake()
     {
         _lens = new List<GameObject>();
@@ -56,49 +64,67 @@ public class Wire : MonoBehaviour
         }
     }
 
-    public Wire AddPoint(Vector3Int cellPos)
+    private void AddPointInternel(Vector3Int cellPos)
     {
         Vector3 worldPos = GameWorld.Instance.GetCellCenterWorldPos(cellPos);
+
         _worldPoints.Add(worldPos);
         _cellPoints.Add(cellPos);
-        if (_worldPoints.Count == 1)
+        if (PointsCount > 1) SpawnLen();
+    }
+
+    private void RemoveLastPointInternel()
+    {
+        _worldPoints.RemoveAt(_worldPoints.Count - 1);
+        _cellPoints.RemoveAt(_cellPoints.Count - 1);
+        GameObject.Destroy(_lens[_lens.Count - 1]);
+        _lens.RemoveAt(_lens.Count - 1);
+    }
+
+    public Wire AddPoint(Vector3Int cellPos)
+    {
+        AddPointInternel(cellPos);
+        if (PointsCount == 1)
         {
-            _worldPoints.Add(worldPos);
-            _cellPoints.Add(cellPos);
+            AddPointInternel(cellPos);
         }
-        if (_worldPoints.Count > 1)
-            _lens.Add(SpawnLen(worldPos));
 
         return this;
     }
 
     private void RemoveLast()
     {
-        if (_worldPoints.Count >= 2)
+        if (PointsCount >= 2)
         {
-            _worldPoints.RemoveAt(_worldPoints.Count - 1);
-            _cellPoints.RemoveAt(_cellPoints.Count - 1);
-            GameObject.Destroy(_lens[_lens.Count - 1]);
-            _lens.RemoveAt(_lens.Count - 1);
+            RemoveLastPointInternel();
         }
     }
 
-    private GameObject SpawnLen(Vector3 worldPos)
+    private void SetLenPositionAndRotation(Transform lenTf)
     {
-        var retLen = Instantiate<GameObject>(_len, _canvas.transform);
-        Vector3 endPos = _worldPoints[_worldPoints.Count - 2];
-        var worldPixel = Camera.main.WorldToScreenPoint(worldPos);
-        var endPixel = Camera.main.WorldToScreenPoint(endPos);
-        float pixelDistance = Vector3.Distance(worldPixel, endPixel);
-        endPixel -= new Vector3(_lenWidth / 2, 0f, 0f);
-        retLen.transform.position = Camera.main.ScreenToWorldPoint(endPixel);
-        Debug.Log("The distance :" + pixelDistance);
-        retLen.GetComponent<RectTransform>().sizeDelta = new Vector2(pixelDistance + _lenWidth, _lenWidth);
-        retLen.GetComponent<RectTransform>().pivot = new Vector2(_lenWidth / (2 * pixelDistance + 2 * _lenWidth), 0.5f);
-        Quaternion rot = Quaternion.FromToRotation(Vector3.right, (worldPos - endPos).normalized);
-        retLen.transform.localRotation = rot;
+        Vector3 nextPos = _worldPoints[PointsCount - 1];
+        Vector3 lastPos = _worldPoints[PointsCount - 2];
+        var nextPixel = Camera.main.WorldToScreenPoint(nextPos);
+        var lastPixel = Camera.main.WorldToScreenPoint(lastPos);
+        lastPixel -= new Vector3(_lenWidth / 2f, 0f, 0f);
+        lenTf.position = Camera.main.ScreenToWorldPoint(lastPixel);
 
-        return retLen;
+        float pixelDistance = Vector3.Distance(nextPixel, lastPixel);
+        var rtf = lenTf.GetComponent<RectTransform>();
+        var lenLength = pixelDistance + _lenWidth / 2f;
+        rtf.sizeDelta = new Vector2(lenLength, _lenWidth);
+        rtf.pivot = new Vector2(_lenWidth / (2 * lenLength), 0.5f);
+        Quaternion rot = Quaternion.FromToRotation(Vector3.right, (nextPos - lastPos).normalized);
+        rtf.rotation = rot;
+    }
+
+    private void SpawnLen()
+    {
+        var retLenTf = Instantiate<GameObject>(_len, _canvas.transform).transform;
+
+        SetLenPositionAndRotation(retLenTf);
+
+        _lens.Add(retLenTf.gameObject);
     }
 
     private void OnDestroy()
