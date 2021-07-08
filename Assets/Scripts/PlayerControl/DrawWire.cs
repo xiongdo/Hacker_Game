@@ -14,6 +14,11 @@ public class DrawWire : MonoBehaviour
 
     private DrawWireState _state;
 
+    private void Awake()
+    {
+        _state = DrawWireState.hanging;
+    }
+
     public void StartDrawWire()
     {
         _state = DrawWireState.Drawing;
@@ -48,7 +53,7 @@ public class DrawWire : MonoBehaviour
         }
         else if(Input.GetMouseButton(1))
         {
-            _previewWire.AddPoint(mouseGridPos);
+            // _previewWire.AddPoint(mouseGridPos);
             WireMgr.Instance.AddWire(_previewWire);
             EndDrawWire();
         }

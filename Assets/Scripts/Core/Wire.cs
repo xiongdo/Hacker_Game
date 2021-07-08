@@ -46,26 +46,44 @@ public class Wire : MonoBehaviour
     public void SetEndPosition(Vector3Int cellPos)
     {
         var count = _points.Count;
-        _points[count-1] = GameWorld.Instance.GetCellCenterWorldPos(cellPos);
+        if (count > 1)
+        {
+            RemoveLast();
+            AddPoint(cellPos);
+        }
     }
 
     public Wire AddPoint(Vector3Int cellPos)
     {
         Vector3 worldPos = GameWorld.Instance.GetCellCenterWorldPos(cellPos);
         _points.Add(worldPos);
+        if (_points.Count == 1)
+            _points.Add(worldPos);
         if (_points.Count > 1)
             _lens.Add(SpawnLen(worldPos));
 
         return this;
     }
 
+    private void RemoveLast()
+    {
+        if (_points.Count >= 2)
+        {
+            _points.RemoveAt(_points.Count - 1);
+            GameObject.Destroy(_lens[_lens.Count - 1]);
+            _lens.RemoveAt(_lens.Count - 1);
+        }
+    }
+
     private GameObject SpawnLen(Vector3 worldPos)
     {
         var retLen = Instantiate<GameObject>(_len, _canvas.transform);
         Vector3 endPos = _points[_points.Count - 2];
-        var lastPos = _canvas.transform.InverseTransformVector(endPos);
-        retLen.transform.localPosition = lastPos - new Vector3(_lenWidth/2, 0f, 0f);
-        float distance = Vector3.Distance(_points[_points.Count - 2], worldPos);
+        retLen.transform.position = endPos;
+        var worldPixel = Camera.main.WorldToScreenPoint(worldPos);
+        var endPixel = Camera.main.WorldToScreenPoint(endPos);
+        float distance = Vector3.Distance(worldPixel, endPixel);
+        Debug.Log("The distance :" + distance);
         retLen.GetComponent<RectTransform>().sizeDelta = new Vector2(distance, _lenWidth);
         Quaternion rot = Quaternion.FromToRotation(Vector3.right, (worldPos - endPos).normalized);
         retLen.transform.localRotation = rot;

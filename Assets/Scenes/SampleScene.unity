@@ -1349,7 +1349,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 519420031}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 10
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1467,6 +1467,7 @@ GameObject:
   - component: {fileID: 1865323262}
   - component: {fileID: 1865323261}
   - component: {fileID: 1865323263}
+  - component: {fileID: 1865323265}
   m_Layer: 0
   m_Name: SingletonMgr
   m_TagString: Untagged
@@ -1586,6 +1587,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1204fb6841a27884fa856c80677b978d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1865323265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865323257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 263eeea5bb8737143b35297d963980e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2845801461249278401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1681,7 +1694,7 @@ PrefabInstance:
     - target: {fileID: 399183061529970386, guid: 2f414659de1a36b49b69f10f895eeb49,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1333
+      value: -1005
       objectReference: {fileID: 0}
     - target: {fileID: 399183061529970386, guid: 2f414659de1a36b49b69f10f895eeb49,
         type: 3}
@@ -1712,10 +1725,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2066615154, guid: a8e84a780a5aa5f49aa6c0cc8aa725ac, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 769758807214938997, guid: a8e84a780a5aa5f49aa6c0cc8aa725ac,
         type: 3}
       propertyPath: m_Name

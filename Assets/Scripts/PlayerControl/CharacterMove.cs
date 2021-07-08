@@ -135,6 +135,11 @@ public class CharacterMove : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            transform.GetComponent<DrawWire>().StartDrawWire();
+        }
+
         if (_isInSetMode)
         {
             HandleSetMode();
@@ -169,7 +174,7 @@ public class CharacterMove : MonoBehaviour
 
     private void HandleSetMode()
     {
-        var mouseGridPos = GameWorld.Instance.Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        var mouseGridPos = Utility.GetMouseCellPosition();// GameWorld.Instance.Map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         
         // if (Input.GetKeyDown(KeyCode.D))
         // {
