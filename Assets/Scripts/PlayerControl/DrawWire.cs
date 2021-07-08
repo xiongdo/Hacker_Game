@@ -64,7 +64,7 @@ public class DrawWire : MonoBehaviour
         }
         else
         {
-            _previewWire.SetEndPosition(mouseGridPos);
+            _previewWire.PerviewEndPosition(mouseGridPos);
         }
     }
 }

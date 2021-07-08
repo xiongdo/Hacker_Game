@@ -9,6 +9,7 @@ public class Wire : MonoBehaviour
 
     private List<Vector3> _worldPoints;
 
+    [SerializeField]
     private List<Vector3Int> _cellPoints;
 
     private GameObject _canvas;
@@ -18,6 +19,8 @@ public class Wire : MonoBehaviour
     private float _lenWidth = 5f;
 
     private float _alpha = 1.0f;
+
+    private int _unstable = 0;
 
     public float Alpha
     {
@@ -54,10 +57,9 @@ public class Wire : MonoBehaviour
         _len = WireMgr.Instance.LenPrefab;
     }
 
-    public void SetEndPosition(Vector3Int cellPos)
+    public void PerviewEndPosition(Vector3Int cellPos)
     {
-        var count = _worldPoints.Count;
-        if (count > 1)
+        if (PointsCount > 1)
         {
             RemoveLast();
             AddPoint(cellPos);
@@ -79,13 +81,31 @@ public class Wire : MonoBehaviour
         _cellPoints.RemoveAt(_cellPoints.Count - 1);
         GameObject.Destroy(_lens[_lens.Count - 1]);
         _lens.RemoveAt(_lens.Count - 1);
+        if (_unstable == 2 )
+        {
+            _worldPoints.RemoveAt(_worldPoints.Count - 1);
+            _cellPoints.RemoveAt(_cellPoints.Count - 1);
+            GameObject.Destroy(_lens[_lens.Count - 1]);
+            _lens.RemoveAt(_lens.Count - 1);
+        }
     }
 
     public Wire AddPoint(Vector3Int cellPos)
     {
-        AddPointInternel(cellPos);
-        if (PointsCount == 1)
+        if (PointsCount == 0)
         {
+            AddPointInternel(cellPos);
+            AddPointInternel(cellPos);
+        }
+        else
+        {
+            var lastPos = _cellPoints[PointsCount - 1];
+            if (cellPos.x != lastPos.x && cellPos.y != lastPos.y)
+            {
+                AddPointInternel(new Vector3Int(cellPos.x, lastPos.y, 0));
+                _unstable = 2;
+            }
+            else _unstable = 1;
             AddPointInternel(cellPos);
         }
 

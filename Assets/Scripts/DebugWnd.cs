@@ -72,8 +72,17 @@ public class DebugWnd : Singleton<DebugWnd>
         {
             Interrupter.Instance.InterruptAll();
         }
-        if (!_visible) return;
-        _windowRect = GUILayout.Window(666, _windowRect, DrawWindow, _windowTitle);
+        if (_visible)
+        {
+            ShowCellCoordinate();
+        }
+
+        // _windowRect = GUILayout.Window(666, _windowRect, DrawWindow, _windowTitle);
+    }
+
+    private void ShowCellCoordinate()
+    {
+
     }
 
     void HandleLog(string message, string stackTrace, LogType type)
