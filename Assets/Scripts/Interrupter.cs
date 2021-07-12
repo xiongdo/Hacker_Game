@@ -69,6 +69,7 @@ public class Interrupter : Singleton<Interrupter>
 
     public void Play()
     {
+        WireMgr.Instance.ParseWires();
         _state = InterrupterState.Runing;
     }
 

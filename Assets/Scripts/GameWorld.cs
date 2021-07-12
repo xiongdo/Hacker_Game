@@ -17,6 +17,8 @@ public class GameWorld : Singleton<GameWorld>
 
     [Range(0f, 1f)] 
     public float _globalLightIntesity;
+
+    private Dictionary<Vector3Int, Transformer> _transformDict;
     
     public Tilemap Map
     {
@@ -29,6 +31,7 @@ public class GameWorld : Singleton<GameWorld>
     private void Start()
     {
         InitSceneParm();
+        _transformDict = new Dictionary<Vector3Int, Transformer>();
     }
 
     public void InitSceneParm()
@@ -58,5 +61,18 @@ public class GameWorld : Singleton<GameWorld>
     {
         Vector3 cellSize;
         return Map.CellToWorld(cellPos) + new Vector3((cellSize = Map.cellSize).x / 2f, cellSize.y / 2f, 0f);
+    }
+
+    public void AddTransformer(Transformer transformer)
+    {
+        var cellPos = Map.WorldToCell(transformer.transform.position);
+        _transformDict.Add(cellPos, transformer);
+    }
+
+    public Transformer GetCellPosTransformerOrNot(Vector3Int cellPos)
+    {
+        Transformer ret = null;
+        _transformDict.TryGetValue(cellPos, out ret);
+        return ret;
     }
 }

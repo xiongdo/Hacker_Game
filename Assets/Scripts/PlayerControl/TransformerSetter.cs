@@ -52,10 +52,13 @@ public class TransformerSetter : MonoBehaviour
         if (_transformerGo)
         {
             _transformerGo.AddComponent<BoxCollider2D>();
-            _transformerGo.AddComponent<Transformer>().ListenInterrupt().SetSize(_curSize);
+            var transformer = _transformerGo.AddComponent<Transformer>()
+                                            .ListenInterrupt()
+                                            .SetSize(_curSize);
             _transformerGo.transform.parent = null;
             _transformerGo = null;
             _curSize = 1;
+            GameWorld.Instance.AddTransformer(transformer);
         }
     }
 }
