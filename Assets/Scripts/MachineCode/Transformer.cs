@@ -73,6 +73,7 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        GameWorld.Instance.RemoveTransformer(this);
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             Destroy(gameObject);

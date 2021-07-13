@@ -69,6 +69,13 @@ public class GameWorld : Singleton<GameWorld>
         _transformDict.Add(cellPos, transformer);
     }
 
+    public void RemoveTransformer(Transformer transformer)
+    {
+        var tf = transformer.transform;
+        var cellPos = Map.WorldToCell(tf.position);
+        _transformDict.Remove(cellPos);
+    }
+
     public Transformer GetCellPosTransformerOrNot(Vector3Int cellPos)
     {
         Transformer ret = null;
