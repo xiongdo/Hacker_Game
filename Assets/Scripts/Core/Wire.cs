@@ -184,20 +184,57 @@ public class Wire : MonoBehaviour
         _isoutput = true;
     }
 
-    public bool IsIntersect(Wire wire)
+    private bool IsLenIntersect(Vector3Int a, Vector3Int b, Vector3Int c, Vector3Int d)
     {
-        foreach (var lenA in _lens)
+        Vector3Int v1 = b - a;
+        Vector3Int v2 = d - c;
+        Vector3Int step1;
+        Vector3Int step2;
+        int lengthA, lengthB;
+        if ((v1.x == 0 && v1.y == 0) || (v2.x == 0 && v2.y == 0)) return false;
+        if (v1.x != 0)
         {
-            foreach(var lenB in wire._lens)
+            step1 = v1 / Math.Abs(v1.x);
+            lengthA = Math.Abs(v1.x);
+        }
+        else 
+        {
+            step1 = v1 / Math.Abs(v1.y);
+            lengthA = Math.Abs(v1.y);
+        }
+        if (v2.x != 0)
+        {
+            step2 = v2 / Math.Abs(v2.x);
+            lengthB = Math.Abs(v2.x);
+        }
+        else
+        {
+            step2 = v2 / Math.Abs(v2.y);
+            lengthB = Math.Abs(v2.y);
+        }
+        for (int i = 0; i <= lengthA; ++i)
+        {
+            for (int j = 0; j <= lengthB; ++j)
             {
-                var rectA = lenA.GetComponent<RectTransform>().rect;
-                var rectB = lenB.GetComponent<RectTransform>().rect;
-                if (rectA.Overlaps(rectB))
-                {
+                if (a + i * step1 == c + j * step2)
                     return true;
-                }
             }
         }
+
+
+        return false;
+    }
+
+    public bool IsIntersect(Wire wire)
+    {
+        int countA = _cellPoints.Count, countB = wire._cellPoints.Count;
+        for (int i = 0; i < countA - 1; ++i)
+            for (int j = 0; j < countB - 1; ++j)
+            {
+                var intersect = IsLenIntersect(_cellPoints[i], _cellPoints[i + 1], wire._cellPoints[j], wire._cellPoints[j + 1]);
+                if (intersect) return true;
+            }
+
         return false;
     }
 
@@ -206,9 +243,9 @@ public class Wire : MonoBehaviour
         List<Transformer> ret = new List<Transformer>();
         int distanceInt = (int)Vector3Int.Distance(end - start, Vector3Int.zero);
         var step = (end - start) / distanceInt;
-        for (Vector3Int iterVector = start; start != end; start += step)
+        for (int i = 0; i <= distanceInt; ++i)
         {
-            var transformer = GameWorld.Instance.GetCellPosTransformerOrNot(iterVector);
+            var transformer = GameWorld.Instance.GetCellPosTransformerOrNot(start + i * step);
             if (transformer) ret.Add(transformer);
         }
 

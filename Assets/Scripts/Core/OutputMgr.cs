@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class OutputMgr : Singleton<OutputMgr>
 {
-    List<Transformer> _outputTransformers;
+    [SerializeField]
+    private List<Transformer> _outputTransformers;
 
     private void Awake()
     {
@@ -14,5 +15,10 @@ public class OutputMgr : Singleton<OutputMgr>
     public void AddListenTransformer(Transformer transformer)
     {
         _outputTransformers.Add(transformer);
+    }
+
+    public void ClearListenTransformer()
+    {
+        _outputTransformers.Clear();
     }
 }

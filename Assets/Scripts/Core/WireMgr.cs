@@ -98,6 +98,7 @@ public class WireMgr : Singleton<WireMgr>
             visited.Add(wire, false);
         }
         Queue<Wire> needVisit = new Queue<Wire>(GetIntersects(Output));
+        OutputMgr.Instance.ClearListenTransformer();
         while (needVisit.Count > 0)
         {
             var wire = needVisit.Dequeue();
@@ -135,7 +136,7 @@ public class WireMgr : Singleton<WireMgr>
 
         foreach (var wireB in _wires)
         {
-            if (wire.IsIntersect(wireB))
+            if (wire.IsIntersect(wireB) && !wire.Equals(wireB))
                 ret.Add(wireB);
         }
         return ret;
