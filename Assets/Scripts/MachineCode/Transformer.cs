@@ -27,6 +27,16 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
 
     public int SafeModeLayer;
 
+    private int _transformCount;
+
+    public int TransformCount
+    {
+        get
+        {
+            return _transformCount;
+        }
+    }
+
     private void Awake()
     {
         _state = TransformerState.Ready;
@@ -73,13 +83,16 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
     {
         if (_state == TransformerState.Sleep)
         {
+            _transformCount = 0;
             _state = TransformerState.Ready;
             return;
         }
         else if (_state == TransformerState.Ready)
         {
-            if (ScanSafe())
+            if ((_transformCount = ScanSafe()) > 0)
+            {
                 _state = TransformerState.Sleep;
+            }
         }
     }
 
@@ -97,9 +110,9 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
         return this;
     }
 
-    private bool ScanSafe()
+    private int ScanSafe()
     {
-        var iswork = false;
+        int iswork = 0;
         foreach (CellDirection dir in Enum.GetValues(typeof(CellDirection)))
         {
             var curCellPos = GameWorld.Instance.Map.WorldToCell(transform.position);
@@ -111,7 +124,7 @@ public class Transformer : MonoBehaviour, IPointerClickHandler
                 var tile = GameWorld.Instance.Map.GetTile(scanCellPos) as MachineTileScriptable;
                 if (tile && tile._type == TileType.Safe)
                 {
-                    iswork = true;
+                    iswork += 1;
                     MachineMgr.Instance.DrawTiles(tile, dir.GetOppositeCellPosTrans(curCellPos, scanCellPos));
                     MachineMgr.Instance.AddRemove(scanCellPos);
                     //_shouldCalmDown = true;

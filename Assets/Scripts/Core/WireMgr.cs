@@ -18,6 +18,16 @@ public class WireMgr : Singleton<WireMgr>
 
     [SerializeField]
     private Text _outputText;
+
+    private static int _colorIndex = 0;
+
+    public int NextIndex
+    {
+        get
+        {
+            return (_colorIndex += 1) % 5;
+        }
+    }
         
     public float WireDepth 
     { 
@@ -56,6 +66,14 @@ public class WireMgr : Singleton<WireMgr>
 
     }
 
+    public List<Wire> Wires
+    {
+        get
+        {
+            return _wires;
+        }
+    }
+
     private void Awake()
     {
         SetCanvasSize();
@@ -87,6 +105,7 @@ public class WireMgr : Singleton<WireMgr>
     public void AddWire(Wire wire)
     {
         _wires.Add(wire);
+        wire.WireColor = new List<Color>() { Color.white, Color.black, Color.gray, Color.green, Color.cyan }[NextIndex];
         // ParseWire(wire);
     }
 
@@ -120,14 +139,18 @@ public class WireMgr : Singleton<WireMgr>
 
     public void RemoveWire(Wire wireD)
     {
+        Wire needDeleteWire = null;
         foreach (var wire in _wires)
         {
             if (wireD.Equals(wire))
             {
-                _wires.Remove(wire);
-                MonoBehaviour.Destroy(wire);
+                needDeleteWire = wire;
+
             }
         }
+        if (needDeleteWire)
+            _wires.Remove(needDeleteWire);
+            MonoBehaviour.Destroy(needDeleteWire);
     }
 
     private List<Wire> GetIntersects(Wire wire)

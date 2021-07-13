@@ -260,7 +260,40 @@ public class Wire : MonoBehaviour
         {
             ret.AddRange(GetLineIntersectTransformers(_cellPoints[i - 1], _cellPoints[i]));
         }
-
         return ret;
+    } 
+
+    private bool LineContainsPoint(Vector3Int start, Vector3Int end, Vector3Int cellPos)
+    {
+        Vector3Int v = end - start;
+        int length;
+        Vector3Int step;
+        if (v.x == 0 && v.y == 0) return false;
+        if (v.x != 0)
+        {
+            length = Math.Abs(v.x);
+            step = v / Math.Abs(v.x);
+        }
+        else
+        {
+            length = Math.Abs(v.y);
+            step = v / Math.Abs(v.y);
+        }
+        for (int i = 0; i <= length; ++i)
+        {
+            if (start + i * step == cellPos) return true;
+        }
+        return false;
+    }
+
+    public bool ContainsPoint(Vector3Int cellPos)
+    {
+        int count = _cellPoints.Count;
+        for (int i = 0; i < count - 1; ++i)
+        {
+            var isContained = LineContainsPoint(_cellPoints[i], _cellPoints[i + 1], cellPos);
+            if (isContained) return true;
+        }
+        return false;
     }
 }
