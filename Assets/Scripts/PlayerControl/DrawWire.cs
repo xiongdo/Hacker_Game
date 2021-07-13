@@ -49,11 +49,11 @@ public class DrawWire : MonoBehaviour
         if (_previewWire == null)
             _previewWire = WireMgr.Instance.SpawnWire();
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
             _previewWire.AddPoint(mouseGridPos);
         }
-        else if(Input.GetMouseButton(1))
+        else if(Input.GetMouseButtonDown(1))
         {
             // _previewWire.AddPoint(mouseGridPos);
             WireMgr.Instance.AddWire(_previewWire);
@@ -75,7 +75,7 @@ public class DrawWire : MonoBehaviour
     {
         var mouseGridPos = Utility.GetMouseCellPosition();
         Wire needDelete = null;
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             foreach (var wire in WireMgr.Instance.Wires)
             {

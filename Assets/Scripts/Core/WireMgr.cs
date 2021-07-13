@@ -149,8 +149,10 @@ public class WireMgr : Singleton<WireMgr>
             }
         }
         if (needDeleteWire)
+        {
             _wires.Remove(needDeleteWire);
             MonoBehaviour.Destroy(needDeleteWire);
+        }
     }
 
     private List<Wire> GetIntersects(Wire wire)

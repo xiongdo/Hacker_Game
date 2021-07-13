@@ -34,7 +34,8 @@ public class OutputMgr : Singleton<OutputMgr>
 
     public void AddListenTransformer(Transformer transformer)
     {
-        _outputTransformers.Add(transformer);
+        if (!_outputTransformers.Contains(transformer))
+            _outputTransformers.Add(transformer);
     }
 
     public void ClearListenTransformer()
